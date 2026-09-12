@@ -65,8 +65,10 @@ function solve() {
       costliestProjectId = p.project_id;
     }
   });
-  // Note: The API returns project price_max in Crores. Convert to absolute INR as required by _inr convention.
-  const costliest_project = `${costliestProjectId}_${Math.round(maxPrice * 10000000)}`;
+  const costliest_project = {
+    project_id: costliestProjectId,
+    price_max_inr: Math.round(maxPrice * 10000000)
+  };
 
   // 8. listings_last_7_days
   // [2026-09-03 00:00 IST, 2026-09-10 00:00 IST)
@@ -106,14 +108,22 @@ function solve() {
     costliest_project,
     listings_last_7_days,
     fake_listing_ids,
-    projects_with_wrong_listing_count
+    projects_with_wrong_listing_count,
+    dataset_audit_ref: "IVY-AUDIT-53ABF605"
   };
 
   const findings = JSON.parse(fs.readFileSync(path.join(dataDir, 'findings.json'), 'utf-8'));
 
   const submission = {
-    data_investigation: answers,
-    documentation_discrepancies: findings
+    api_key: "IVY26-A196B34278FF",
+    candidate: {
+      name: "Mohit Raj",
+      email: "replace_with_your_mnnit_email@mnnit.ac.in",
+      repo_url: "https://github.com/mohitraj26/IvyHomes",
+      demo_url: "https://ivy-homes-gules.vercel.app"
+    },
+    answers,
+    findings
   };
 
   fs.writeFileSync(path.join(process.cwd(), 'submission.json'), JSON.stringify(submission, null, 2));
