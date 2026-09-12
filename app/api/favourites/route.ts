@@ -1,21 +1,26 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import fs from 'fs/promises';
-import path from 'path';
-
-const getFavPath = () => path.join(process.cwd(), 'data', 'favourites.json');
+const FAV_COOKIE = 'ivy_favourites';
 
 async function getFavouritesData() {
+  const cookieStore = await cookies();
+  const favStr = cookieStore.get(FAV_COOKIE)?.value;
   try {
-    const data = await fs.readFile(getFavPath(), 'utf-8');
-    return JSON.parse(data);
+    return favStr ? JSON.parse(favStr) : {};
   } catch {
     return {};
   }
 }
 
 async function saveFavouritesData(data: any) {
-  await fs.writeFile(getFavPath(), JSON.stringify(data, null, 2));
+  const cookieStore = await cookies();
+  cookieStore.set(FAV_COOKIE, JSON.stringify(data), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30 // 30 days
+  });
 }
 
 export async function GET(request: Request) {

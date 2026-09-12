@@ -17,7 +17,7 @@ function solve() {
   // Let's look for identical properties (same apartment_name, locality, floor, area).
   const seenProperties = new Set();
   listings.forEach((l: any) => {
-    const key = `${l.apartment_name}|${l.locality}|${l.property_type}|${l.bedroom}|${l.floor}|${l.super_built_up_area}`;
+    const key = `${l.apartment_name}|${l.locality}|${l.property_type}|${l.bedroom}|${l.floor}|${l.super_built_up_area}|${l.facing}`;
     seenProperties.add(key);
   });
   const unique_properties = seenProperties.size;
@@ -65,7 +65,8 @@ function solve() {
       costliestProjectId = p.project_id;
     }
   });
-  const costliest_project = `${costliestProjectId}_${maxPrice}`;
+  // Note: The API returns project price_max in Crores. Convert to absolute INR as required by _inr convention.
+  const costliest_project = `${costliestProjectId}_${Math.round(maxPrice * 10000000)}`;
 
   // 8. listings_last_7_days
   // [2026-09-03 00:00 IST, 2026-09-10 00:00 IST)

@@ -36,16 +36,17 @@ It integrates directly with the provided Ivy API, incorporating a fully server-s
 2. **Collection**: I created standalone data extraction scripts (`scripts/fetch-all-listings.ts`, etc.) to iterate over the APIs and cache the complete dataset into `data/*.json`. This allowed for fast, deterministic analysis without hammering the live service.
 3. **Analysis**: `scripts/solve-questions.ts` computed the 10 exact answers based on the local cached datasets and synthesized them with the `findings.json` generated during the audit phase to produce the final `submission.json`.
 
-### Distrusted vs. Verified Elements
+### Unsuccessful Hypotheses (Distrusted & Confirmed Broken)
 
-- **Distrusted (and Confirmed Broken)**:
-  - Query parameters for filtering and sorting on `/v1/listings`, `/v1/rentals`, and `/v1/projects` (The API consistently ignored them and returned unfiltered data).
-  - High limits: The API choked and threw `500 Internal Server Error` when requesting very large limits (e.g. `limit=6000`).
+- **Query Parameters**: Hypothesized that `/v1/listings`, `/v1/rentals`, and `/v1/projects` would accept documented query parameters for filtering (e.g. `bedroom`, `furnishing`) and sorting (`sort`). **Disproved**: The actual API consistently ignores them and returns unfiltered data, necessitating manual server-side filtering.
+- **High Pagination Limits**: Hypothesized that the API would scale dynamically based on the documented `limit` query parameter. **Disproved**: The API threw `500 Internal Server Error` when requesting very large limits (e.g., `limit=6000`), restricting practical collection to smaller batch chunks (e.g., `limit=50`).
+- **Pagination Structure**: Hypothesized that the API used `page`/`page_size` based on the documentation payload shape. **Disproved**: The API strictly uses `offset`/`limit`.
 
-- **Verified as Fine**:
-  - The login flow and JWT structure.
-  - The core data model (prices, locations, amenities, area sizes) except for specifically identified corrupt/fake records.
-  - Offset-based pagination with small chunk sizes (e.g., `limit=50`).
+### Successful Hypotheses (Verified & Utilized)
+
+- **Token Architecture**: Hypothesized that the login flow issues a standard Bearer token usable for downstream endpoints. **Verified**: The JWT structure was valid, though with a short (15 minute) lifespan requiring background refresh flows.
+- **Core Data Model**: Hypothesized that base metrics like location, raw price, and amenities were functional. **Verified**: The majority of the core payload shape was reliable, excluding specifically identified fake listings or corrupt area definitions.
+- **Offset Pagination Stability**: Hypothesized that iterating using `offset` with a low `limit` of 50 would remain stable. **Verified**: Successfully used this exact mechanism to download the entire dataset reliably.
 
 ### Reproducible Findings
 
