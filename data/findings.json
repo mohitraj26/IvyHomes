@@ -1,0 +1,56 @@
+[
+  {
+    "endpoint": "/auth/login",
+    "category": "auth",
+    "documented": "Tokens are valid for 24 hours; there is no refresh flow.",
+    "actual": "Token expires in 900s and includes a refresh_token.",
+    "how_found": "Manual inspection of /auth/login response.",
+    "impact": "Frontend must implement refresh token flow.",
+    "evidence": "expires_in: 900"
+  },
+  {
+    "endpoint": "/v1/{collection}",
+    "category": "pagination",
+    "documented": "Collection endpoints use page/limit pagination.",
+    "actual": "API uses offset/limit pagination.",
+    "how_found": "Calling /v1/listings?page=2&limit=2 returns offset=0 and ignores the page parameter.",
+    "impact": "Scripts and frontend will infinite-loop if they rely on page numbering.",
+    "evidence": "Response keys: limit,offset,count,total,has_more,results"
+  },
+  {
+    "endpoint": "/v1/listings",
+    "category": "sorting",
+    "documented": "Sorting works via query parameter.",
+    "actual": "Server ignores sort parameter.",
+    "how_found": "Calling /v1/listings?sort=price returned unsorted prices.",
+    "impact": "Frontend must manually sort results.",
+    "evidence": "Prices: 41740000,39590000,60340000,51160000,64910000"
+  },
+  {
+    "endpoint": "/v1/projects",
+    "category": "units",
+    "documented": "Correct price units.",
+    "actual": "Project prices are in Crores instead of absolute INR.",
+    "how_found": "Observed price_min values like 4.03.",
+    "impact": "Must convert Crores to INR before comparing or displaying.",
+    "evidence": "Project P50001 price_min is 4.03"
+  },
+  {
+    "endpoint": "/v1/listings",
+    "category": "data_quality",
+    "documented": "Data is logically sound.",
+    "actual": "Found listings where carpet_area > super_built_up_area.",
+    "how_found": "Compared carpet_area to super_built_up_area in the dataset.",
+    "impact": "These properties should probably be filtered out or flagged as corrupt.",
+    "evidence": "Listing MAG-5000775 has carpet 94 and super 52"
+  },
+  {
+    "endpoint": "/v1/projects",
+    "category": "consistency",
+    "documented": "Project total_listings matches actual listings.",
+    "actual": "446 projects have total_listings that do not match the actual count.",
+    "how_found": "Cross-referenced project_id in listings with project.total_listings.",
+    "impact": "Do not rely on total_listings; calculate dynamically.",
+    "evidence": "446 mismatches found."
+  }
+]
