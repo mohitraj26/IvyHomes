@@ -12,7 +12,7 @@ export default function RentalCard({ rental }: { rental: any }) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-emerald-700 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm">
-          {formatMoney(rental.monthly_rent)}<span className="text-xs font-normal text-emerald-600"> /mo</span>
+          {formatMoney(rental.price)}<span className="text-xs font-normal text-emerald-600"> /mo</span>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export default function RentalCard({ rental }: { rental: any }) {
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
-            <span className="truncate">{rental.super_built_up_area} sqft</span>
+            <span className="truncate">{rental.super_builtup_area} sqft</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
@@ -46,7 +46,7 @@ export default function RentalCard({ rental }: { rental: any }) {
         </div>
 
         <div className="mt-5 pt-4 border-t border-gray-100 flex justify-between items-center text-sm">
-          <span className="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded">ID: {rental.rental_id}</span>
+          <span className="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-1 rounded">ID: {rental.listing_id}</span>
           <span className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded text-xs font-medium capitalize truncate flex-1 ml-4 text-right">
             By {rental.posted_by}
           </span>
