@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getProjectById, getListings } from '@/lib/server-cache';
 
 export async function GET(request: Request, context: any) {
-  const { params } = context;
+  const params = await context.params;
   const cookieStore = await cookies();
   const token = cookieStore.get('ivy_access_token')?.value;
 

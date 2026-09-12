@@ -1,5 +1,6 @@
 export default function RentalCard({ rental }: { rental: any }) {
   const formatMoney = (amount: number) => {
+    if (!amount) return 'N/A';
     return `₹${amount.toLocaleString('en-IN')}`;
   };
 
