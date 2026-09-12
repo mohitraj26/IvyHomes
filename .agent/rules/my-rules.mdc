@@ -1,0 +1,365 @@
+# Ivy Homes Internship Project — Agent Rules
+
+## Project Objective
+
+Build the Ivy Homes internship assignment as a production-quality
+full-stack web application.
+
+The project must use the real Ivy Homes API.
+
+The running API is the source of truth.
+
+Do NOT blindly trust API_REFERENCE.md when the actual API behaves
+differently.
+
+---
+
+## Core Technology
+
+Use:
+
+- Next.js
+- TypeScript
+- React
+- Tailwind CSS
+- Next.js server/API routes where appropriate
+- Git
+- Vercel for deployment
+
+Prefer simple, maintainable architecture over unnecessary complexity.
+
+Do not introduce a database unless the assignment genuinely requires it.
+
+---
+
+## Critical API Rule
+
+Before implementing assumptions about the API:
+
+1. Inspect the provided API reference.
+2. Test the actual running API.
+3. Verify endpoint paths.
+4. Verify request parameters.
+5. Verify response structures.
+6. Verify pagination.
+7. Verify filters.
+8. Verify sorting.
+9. Verify authentication.
+10. Record discrepancies.
+
+The running API has priority over the documentation.
+
+Never invent API responses.
+
+---
+
+## Security
+
+The Ivy API key is a secret.
+
+NEVER:
+
+- hardcode the API key in source code
+- put it in React/client components
+- expose it through NEXT_PUBLIC variables
+- commit it to Git
+- include it in README
+- include it in screenshots
+- print it in logs
+- send it to the browser
+
+Use environment variables.
+
+Expected variables:
+
+IVY_API_BASE_URL
+IVY_API_KEY
+
+Use server-side API routes/proxy logic to communicate with Ivy Homes.
+
+---
+
+## Development Strategy
+
+Do NOT build the entire application in one step.
+
+Work incrementally.
+
+Required order:
+
+1. Understand assignment
+2. Inspect repository
+3. Inspect API documentation
+4. Verify live API
+5. Build API client
+6. Download/analyze data
+7. Solve assignment questions
+8. Investigate documentation discrepancies
+9. Build authentication
+10. Build listings
+11. Build listing details
+12. Build favourites
+13. Build rentals
+14. Build projects
+15. Build insights
+16. Test everything
+17. Prepare submission
+18. Deploy to Vercel
+
+After each major phase:
+
+- run typecheck
+- run lint
+- run relevant tests
+- verify the application
+- fix errors before continuing
+
+---
+
+## Data Investigation
+
+The complete dataset should be collected early.
+
+Do not repeatedly call the API unnecessarily.
+
+Create reusable scripts for:
+
+- pagination
+- data collection
+- analysis
+- validation
+
+Prefer deterministic scripts over manually inspecting records.
+
+Store derived analysis locally when useful.
+
+Do not expose private API credentials in generated data files.
+
+---
+
+## Assignment Questions
+
+The ten assignment questions must be solved from actual API data.
+
+Do not guess answers.
+
+For every calculated answer:
+
+- document the source endpoint
+- document the calculation
+- document assumptions
+- make the calculation reproducible
+
+---
+
+## Data Quality
+
+Only report a documentation discrepancy when it can be reproduced.
+
+Do not label unusual data as corrupt/fake without evidence.
+
+For every finding record:
+
+- endpoint
+- category
+- documented behavior
+- actual behavior
+- how discovered
+- impact
+- evidence
+
+Precision is more important than quantity.
+
+---
+
+## Frontend Requirements
+
+Required capabilities:
+
+1. Login
+2. Listings
+3. Listing detail
+4. Saved listings
+5. Rentals
+6. Projects
+7. Insights
+
+Use real API data.
+
+Do not use mock property data in production UI.
+
+---
+
+## UX
+
+Build a professional real-estate product.
+
+Prioritize:
+
+- clean layout
+- responsive design
+- readable property cards
+- clear prices
+- clear area units
+- loading states
+- empty states
+- error states
+- accessible controls
+- useful filters
+
+Avoid unnecessary animations.
+
+Do not spend excessive time on visual effects.
+
+Correctness > decoration.
+
+---
+
+## Filters
+
+If the server does not correctly implement a documented filter:
+
+do not silently assume it works.
+
+Implement client-side filtering only when appropriate and document
+the discrepancy.
+
+---
+
+## Favourites
+
+Favourites must be user-specific.
+
+Verify:
+
+- add
+- remove
+- list
+- refresh persistence
+- logout/login persistence
+- separation between demo users
+
+---
+
+## Code Quality
+
+Prefer:
+
+- small reusable components
+- typed API responses
+- centralized API client
+- clear error handling
+- reusable hooks where useful
+- server/client separation
+- meaningful naming
+
+Avoid:
+
+- giant components
+- duplicated API logic
+- unnecessary dependencies
+- unnecessary abstractions
+- dead code
+
+---
+
+## Git
+
+Commit meaningful milestones.
+
+Recommended style:
+
+feat:
+fix:
+refactor:
+test:
+docs:
+chore:
+
+Do not squash all work into one final commit.
+
+Git history should clearly show development progress.
+
+---
+
+## Testing
+
+Before considering a feature complete, verify:
+
+- happy path
+- loading state
+- empty state
+- API failure
+- invalid input
+- authentication failure
+- refresh
+- responsive behavior
+
+Run:
+
+- npm run lint
+- npm run build
+
+and any available tests.
+
+---
+
+## Deployment
+
+Deployment target:
+
+Vercel.
+
+Before deployment:
+
+1. verify production build
+2. verify environment variables
+3. verify API access
+4. verify authentication
+5. verify frontend routes
+6. verify no secret is exposed
+7. deploy
+8. test production URL
+
+Never put the Ivy API key into a public environment variable.
+
+---
+
+## Agent Behavior
+
+Before making a large architectural change:
+
+explain the plan briefly.
+
+For small obvious changes, proceed without unnecessary questions.
+
+Do not repeatedly ask the user for confirmation for normal development tasks.
+
+If something fails:
+
+1. inspect the error
+2. identify root cause
+3. fix it
+4. rerun validation
+
+Do not hide errors.
+
+Do not claim something works unless it has been tested.
+
+---
+
+## Important
+
+The assignment is an investigation task as well as a frontend task.
+
+Do not optimize only for making the UI look good.
+
+The final project must demonstrate:
+
+- API investigation
+- correct data handling
+- reproducible analysis
+- documentation discrepancy detection
+- full-stack implementation
+- testing
+- production deployment
