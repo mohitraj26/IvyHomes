@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ivy Homes Property Explorer
 
-## Getting Started
+A clean, reliable property discovery application built on Next.js 14 (App Router) and Tailwind CSS. 
+It integrates directly with the provided Ivy API, incorporating a fully server-side proxy to keep credentials secure and enabling accurate data-quality investigation.
 
-First, run the development server:
+## Features
+- **Secure Authentication**: Uses the real Ivy API token flow, automatically refreshing sessions in the background. Token logic and API Keys are fully insulated from the client browser.
+- **Robust Discovery**: Paginated browsing for Listings, Rentals, and Projects with functional filtering and sorting (performed reliably via our in-memory server proxy, correcting for the actual API ignoring query parameters).
+- **Persistent Favourites**: Saved properties are persisted server-side per-user account, surviving page reloads and re-logins.
+- **Data Insights**: A dashboard presenting the computed answers to the 10 data-investigation questions alongside evidence-based data-quality findings.
+- **Production Ready**: Verified Vercel deployment with environment variables and secure configuration.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Setup Instructions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Copy `.env.example` to `.env.local` and add your credentials:
+   ```bash
+   cp .env.example .env.local
+   # Fill in IVY_API_KEY, IVY_EMAIL, and IVY_PASSWORD
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+4. Open [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+## Data Investigation Methodology
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Discovery & Auditing**: Before building the UI, I wrote `scripts/verify-documentation.ts` to programmatically probe the API endpoints, test pagination limits, filtering parameters, sorting, and field availability against the documented claims.
+2. **Collection**: I created standalone data extraction scripts (`scripts/fetch-all-listings.ts`, etc.) to iterate over the APIs and cache the complete dataset into `data/*.json`. This allowed for fast, deterministic analysis without hammering the live service.
+3. **Analysis**: `scripts/solve-questions.ts` computed the 10 exact answers based on the local cached datasets and synthesized them with the `findings.json` generated during the audit phase to produce the final `submission.json`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Distrusted vs. Verified Elements
 
-## Deploy on Vercel
+- **Distrusted (and Confirmed Broken)**:
+  - Query parameters for filtering and sorting on `/v1/listings`, `/v1/rentals`, and `/v1/projects` (The API consistently ignored them and returned unfiltered data).
+  - High limits: The API choked and threw `500 Internal Server Error` when requesting very large limits (e.g. `limit=6000`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Verified as Fine**:
+  - The login flow and JWT structure.
+  - The core data model (prices, locations, amenities, area sizes) except for specifically identified corrupt/fake records.
+  - Offset-based pagination with small chunk sizes (e.g., `limit=50`).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Reproducible Findings
+
+The full list of discrepancies is detailed in `submission.json` and presented on the `/insights` page. Key findings include:
+- **Pagination Logic**: The documentation claimed `page`/`page_size` was used, but the actual API strictly uses `offset`/`limit`.
+- **Ignored Parameters**: Attempting to filter by `bedroom` or `furnishing` simply returned the entire dataset.
+- **Data Corruption**: Several listings reported a `carpet_area` larger than their `super_built_up_area`, and others had highly suspicious zero-values for pricing.
+
+## Future Improvements (With 2 Additional Days)
+
+1. **Database Integration**: Rather than reading JSON files into an in-memory API proxy, I would seed the fetched properties into a Postgres (e.g., Supabase) or Redis database to allow highly optimized, scalable server-side filtering and full-text search.
+2. **End-to-End Testing**: Implement Playwright to add automated browser testing covering the critical authentication and filtering flows.
+3. **Enhanced Visualizations**: Integrate `recharts` for more interactive graphical analysis of the market distribution on the Insights page.
